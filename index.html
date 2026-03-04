@@ -406,9 +406,88 @@
     }
 
     @media print {
+      /* ── Reset for print ── */
+      * { animation: none !important; transition: none !important; }
+
+      body {
+        background: #fff;
+        color: #1a1410;
+        font-size: 11px;
+        line-height: 1.6;
+      }
+
       body::before { display: none; }
       .corner-ornament { display: none; }
-      header, .sidebar, .main, .page-footer { opacity: 1 !important; animation: none !important; }
+      .page-footer { display: none; }
+
+      .page {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* ── Force all animated elements visible ── */
+      header, .sidebar, .main, .page-footer {
+        opacity: 1 !important;
+      }
+
+      /* ── Header ── */
+      header {
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+      }
+
+      .name-block h1 {
+        font-size: 36pt;
+      }
+
+      /* ── Two-column layout preserved ── */
+      .body-grid {
+        grid-template-columns: 180px 1fr;
+        gap: 0 40px;
+      }
+
+      /* ── Strip decorative backgrounds ── */
+      .exp-entry {
+        border-left-color: #d9cfc2;
+      }
+
+      /* ── Page break rules ── */
+
+      /* Never break inside a header or sidebar block */
+      header                  { break-inside: avoid; }
+      .sidebar-block          { break-inside: avoid; }
+      .edu-entry              { break-inside: avoid; }
+
+      /* Never break inside an experience entry */
+      .exp-entry              { break-inside: avoid; }
+
+      /* Allow a break before experience entries if needed,
+         but never orphan the company name from its bullets */
+      .exp-header             { break-after: avoid; }
+      .exp-role               { break-after: avoid; }
+
+      /* Force a new page before the main experience section
+         if sidebar + header already fills most of page 1.
+         Remove this rule if everything fits on one page. */
+      /* .main { break-before: page; } */
+
+      /* ── Print colors — keep terracotta accents ── */
+      .section-label          { color: #c4622d; }
+      .exp-role               { color: #c4622d; }
+      .edu-school             { color: #c4622d; }
+      .title-tag              { border-color: #d9cfc2; color: #9a8878; }
+
+      /* ── Links — show URL for contact ── */
+      .contact-block a::after {
+        content: none;
+      }
+
+      /* ── Page size — A4 ── */
+      @page {
+        size: A4 portrait;
+        margin: 14mm 16mm 14mm 16mm;
+      }
     }
   </style>
 </head>
@@ -470,7 +549,7 @@
           <li>Java · Spring Boot</li>
           <li>NodeJS · Python · C++</li>
           <li>SQL · Odoo ERP</li>
-          <li>CI/CD Pipelines (Gitlab CI, Github Actions)</li>
+          <li>CI/CD Pipelines</li>
         </ul>
       </div>
 
@@ -602,18 +681,11 @@
   <footer class="page-footer">
     <span>Benoît Roman · Resume</span>
     <div class="footer-dot"></div>
-    <span>benoit.roman@proton.me</span>
+    <span><a href="mailto:benoit.roman@proton.me">benoit.roman@proton.me</a></span>
   </footer>
 
 </div><!-- /page -->
 
 <!-- Decorative SVG corner -->
 <svg class="corner-ornament" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="30" cy="30" r="28" stroke="#c4622d" stroke-width="1"/>
-  <circle cx="30" cy="30" r="20" stroke="#c4622d" stroke-width="0.5"/>
-  <line x1="30" y1="2" x2="30" y2="58" stroke="#c4622d" stroke-width="0.5"/>
-  <line x1="2" y1="30" x2="58" y2="30" stroke="#c4622d" stroke-width="0.5"/>
-</svg>
-
-</body>
-</html>
+  <circle cx="30" cy="30" r="28" stroke="#c4622d" st
