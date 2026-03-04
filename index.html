@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benoît Roman — Senior Architect & Technical Leader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf7f2;
+      --ink: #1a1410;
+      --brown-dark: #2e1f0f;
+      --brown-mid: #6b4226;
+      --terracotta: #c4622d;
+      --gold: #c9973a;
+      --sage: #7a8c6e;
+      --muted: #9a8878;
+      --border: #d9cfc2;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: end;
+      padding-bottom: 48px;
+      border-bottom: 1.5px solid var(--border);
+      margin-bottom: 60px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .name-block h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--brown-dark);
+      margin-bottom: 12px;
+    }
+
+    .name-block h1 em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .title-tag {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-top: 16px;
+    }
+
+    .contact-block {
+      text-align: right;
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .contact-block a {
+      color: var(--brown-mid);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .contact-block a:hover {
+      color: var(--terracotta);
+      border-bottom-color: var(--terracotta);
+    }
+
+    .contact-block .location {
+      font-style: italic;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── SECTION STRUCTURE ── */
+    .body-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    /* Main content */
+    .main {
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.35s forwards;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── PROFILE ── */
+    .profile-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--brown-dark);
+      margin-bottom: 50px;
+      padding-bottom: 50px;
+      border-bottom: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    /* ── SIDEBAR BLOCKS ── */
+    .sidebar-block {
+      margin-bottom: 44px;
+    }
+
+    .sidebar-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar-block ul li {
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--brown-dark);
+      font-size: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .sidebar-block ul li::before {
+      content: '—';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .sidebar-block ul li:last-child {
+      border-bottom: none;
+    }
+
+    .skill-category {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .skill-category:first-child { margin-top: 0; }
+
+    /* ── LANGUAGE BADGES ── */
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .lang-item:last-child { border-bottom: none; }
+
+    .lang-name { color: var(--brown-dark); }
+
+    .lang-level {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── EXPERIENCE ENTRIES ── */
+    .experience-list {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .exp-entry {
+      position: relative;
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+
+    .exp-entry:hover {
+      border-left-color: var(--terracotta);
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .exp-company {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--brown-dark);
+      line-height: 1.2;
+    }
+
+    .exp-period {
+      font-size: 10.5px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .exp-role {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .exp-bullets li {
+      position: relative;
+      padding-left: 16px;
+      color: var(--brown-mid);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .exp-bullets li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    /* ── EDUCATION ── */
+    .edu-entry {
+      margin-bottom: 18px;
+    }
+
+    .edu-degree {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--brown-dark);
+      font-style: italic;
+    }
+
+    .edu-school {
+      font-size: 11.5px;
+      color: var(--terracotta);
+      margin-top: 2px;
+    }
+
+    .edu-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── FOOTER RULE ── */
+    .page-footer {
+      margin-top: 70px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    .page-footer span {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      opacity: 0.5;
+    }
+
+    /* ── DECORATIVE CORNER ── */
+    .corner-ornament {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      width: 60px;
+      height: 60px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .page { padding: 36px 24px 70px; }
+
+      header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .contact-block { text-align: left; }
+
+      .body-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .sidebar {
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 48px;
+        padding-bottom: 48px;
+      }
+    }
+
+    @media print {
+      body::before { display: none; }
+      .corner-ornament { display: none; }
+      header, .sidebar, .main, .page-footer { opacity: 1 !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="name-block">
+      <h1>Benoît<br/><em>Roman</em></h1>
+      <div class="title-tag">Senior Architect &amp; Technical Leader · 20 yrs</div>
+    </div>
+    <div class="contact-block">
+      <span class="location">Baisy-Thy, Belgium</span>
+      <a href="tel:+32474746231">+32 474 74 62 31</a><br/>
+      <a href="mailto:benoit.roman@proton.me">benoit.roman@proton.me</a><br/>
+      <a href="https://linkedin.com/in/benoitroman" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </header>
+
+  <!-- ── PROFILE ── -->
+  <p class="profile-text">
+    Trilingual Technical Leader and Senior Architect with 20 years of experience scaling teams of 10+ developers,
+    implementing DevSecOps, and delivering mission-critical financial and governmental platforms.
+    Expert at bridging the gap between complex software engineering and tangible business value.
+  </p>
+
+  <!-- ── BODY ── -->
+  <div class="body-grid">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+
+      <div class="sidebar-block">
+        <div class="section-label">Architecture</div>
+        <ul>
+          <li>Microservices &amp; API Design</li>
+          <li>Scalable System Architecture</li>
+          <li>Security &amp; DevSecOps</li>
+          <li>Cloud Integration</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">Governance</div>
+        <ul>
+          <li>TDD &amp; Clean Code</li>
+          <li>Agile / Scrum Master</li>
+          <li>Team Scaling (10+ devs)</li>
+          <li>Shift-Left Strategy</li>
+          <li>Budget &amp; Recruitment</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">Stack</div>
+        <ul>
+          <li>Java · Spring Boot</li>
+          <li>NodeJS · Python · C++</li>
+          <li>SQL · Odoo ERP</li>
+          <li>CI/CD Pipelines</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">Languages</div>
+        <div class="lang-item">
+          <span class="lang-name">French</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">English</span>
+          <span class="lang-level">C2 · Fluent</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Dutch</span>
+          <span class="lang-level">B2 · Professional</span>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">Education</div>
+        <div class="edu-entry">
+          <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
+          <div class="edu-school">ISIB · Brussels</div>
+          <div class="edu-note">Magna Cum Laude</div>
+        </div>
+        <div class="edu-entry">
+          <div class="edu-degree">Certified Scrum Master</div>
+          <div class="edu-school">2013</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── EXPERIENCE ── -->
+    <main class="main">
+      <div class="section-label">Experience</div>
+
+      <div class="experience-list">
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">Speos</span>
+            <span class="exp-period">01/2023 – Present</span>
+          </div>
+          <div class="exp-role">Senior Architect &amp; Product Delivery Leader</div>
+          <ul class="exp-bullets">
+            <li>Leading a team of 10 developers to elevate technical excellence and harmonize development practices across the org.</li>
+            <li>Driving design and delivery of e-invoicing and Collect2Mail integration platforms.</li>
+            <li>Implementing Shift-Left strategies, DevSecOps, and TDD throughout the full SDLC.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">Idealis Consulting</span>
+            <span class="exp-period">05/2021 – 10/2022</span>
+          </div>
+          <div class="exp-role">Technical Team Leader</div>
+          <ul class="exp-bullets">
+            <li>Built and led a 7-person integration team (Devs &amp; BAs) delivering Odoo ERP platforms for enterprise customers.</li>
+            <li>Designed and delivered the Isabel Connect interface for major Belgian bank network integration.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">Smals</span>
+            <span class="exp-period">06/2019 – 05/2021</span>
+          </div>
+          <div class="exp-role">Technical Team Leader</div>
+          <ul class="exp-bullets">
+            <li>Led a major architectural rework of the EHealth Box secure messaging platform.</li>
+            <li>Managed recruitment, budgets, and direct reporting to the Board of Directors.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">Odoo</span>
+            <span class="exp-period">02/2018 – 04/2019</span>
+          </div>
+          <div class="exp-role">Senior Technical Consultant</div>
+          <ul class="exp-bullets">
+            <li>Technical lead for large-scale customer integrations and pre-sales engineering support.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">Deutsche Bank AG</span>
+            <span class="exp-period">07/2017 – 01/2018</span>
+          </div>
+          <div class="exp-role">IT Project Manager · AML/KYC</div>
+          <ul class="exp-bullets">
+            <li>Managed AnaCredit regulatory credit reporting and deployed reengineered customer screening systems.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">PYCO Management</span>
+            <span class="exp-period">01/2016 – 06/2017</span>
+          </div>
+          <div class="exp-role">Senior Consultant &amp; Project Manager</div>
+          <ul class="exp-bullets">
+            <li>Orchestrated application releases for BNP Paribas Fortis and AlphaCredit across international sites.</li>
+          </ul>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-company">SWIFT</span>
+            <span class="exp-period">08/2006 – 12/2015</span>
+          </div>
+          <div class="exp-role">Product Manager · Integration Specialist · Engineer</div>
+          <ul class="exp-bullets">
+            <li>Delivered API-based Sanctions Screening for the Alliance Access messaging application.</li>
+            <li>Developed automated micro-services API generation frameworks and archive migration tooling.</li>
+          </ul>
+        </div>
+
+      </div>
+    </main>
+
+  </div><!-- /body-grid -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="page-footer">
+    <span>Benoît Roman · Resume</span>
+    <div class="footer-dot"></div>
+    <span>benoit.roman@proton.me</span>
+  </footer>
+
+</div><!-- /page -->
+
+<!-- Decorative SVG corner -->
+<svg class="corner-ornament" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="30" cy="30" r="28" stroke="#c4622d" stroke-width="1"/>
+  <circle cx="30" cy="30" r="20" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="30" y1="2" x2="30" y2="58" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="2" y1="30" x2="58" y2="30" stroke="#c4622d" stroke-width="0.5"/>
+</svg>
+
+</body>
+</html>
