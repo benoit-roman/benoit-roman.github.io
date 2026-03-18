@@ -328,6 +328,10 @@
     }
 
     /* ── EDUCATION ── */
+    .sidebar-edu-mobile {
+      display: none;
+    }
+
     .edu-entry {
       margin-bottom: 18px;
     }
@@ -406,15 +410,38 @@
 
       .contact-block { text-align: left; }
 
+      /* Switch to flex so order property works across sidebar/main */
       .body-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 0;
       }
 
+      /* Skills/languages sidebar above experience */
       .sidebar {
+        order: 1;
         border-bottom: 1px solid var(--border);
         margin-bottom: 48px;
         padding-bottom: 48px;
+      }
+
+      /* Hide education inside sidebar on mobile */
+      .sidebar-edu {
+        display: none;
+      }
+
+      /* Experience in the middle */
+      .main {
+        order: 2;
+      }
+
+      /* Education appended at the bottom */
+      .sidebar-edu-mobile {
+        display: block;
+        order: 3;
+        margin-top: 48px;
+        padding-top: 48px;
+        border-top: 1px solid var(--border);
       }
     }
 
@@ -583,7 +610,7 @@
         </div>
       </div>
 
-      <div class="sidebar-block">
+      <div class="sidebar-block sidebar-edu">
         <div class="section-label">Education</div>
         <div class="edu-entry">
           <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
@@ -696,6 +723,20 @@
       </div>
     </main>
 
+    <!-- ── EDUCATION (mobile only, shown below experience) ── -->
+    <div class="sidebar-block sidebar-edu-mobile">
+      <div class="section-label">Education</div>
+      <div class="edu-entry">
+        <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
+        <div class="edu-school">ISIB · Brussels</div>
+        <div class="edu-note">Magna Cum Laude</div>
+      </div>
+      <div class="edu-entry">
+        <div class="edu-degree">Certified Scrum Master</div>
+        <div class="edu-school">2013</div>
+      </div>
+    </div>
+
   </div><!-- /body-grid -->
 
   <!-- ── FOOTER ── -->
@@ -709,4 +750,11 @@
 
 <!-- Decorative SVG corner -->
 <svg class="corner-ornament" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="30" cy="30" r="28" stroke="#c4622d" st
+  <circle cx="30" cy="30" r="28" stroke="#c4622d" stroke-width="1"/>
+  <circle cx="30" cy="30" r="20" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="30" y1="2" x2="30" y2="58" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="2" y1="30" x2="58" y2="30" stroke="#c4622d" stroke-width="0.5"/>
+</svg>
+
+</body>
+</html>
