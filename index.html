@@ -328,6 +328,10 @@
     }
 
     /* ── EDUCATION ── */
+    .sidebar-edu-mobile {
+      display: none;
+    }
+
     .edu-entry {
       margin-bottom: 18px;
     }
@@ -389,6 +393,10 @@
       pointer-events: none;
     }
 
+    /* ── PRINT-ONLY ELEMENTS (hidden on screen) ── */
+    .print-skills-band,
+    .print-edu-block { display: none; }
+
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
@@ -406,32 +414,59 @@
 
       .contact-block { text-align: left; }
 
+      /* Switch to flex so order property works across sidebar/main */
       .body-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 0;
       }
 
+      /* Skills/languages sidebar above experience */
       .sidebar {
+        order: 1;
         border-bottom: 1px solid var(--border);
         margin-bottom: 48px;
         padding-bottom: 48px;
       }
+
+      /* Hide education inside sidebar on mobile */
+      .sidebar-edu {
+        display: none;
+      }
+
+      /* Experience in the middle */
+      .main {
+        order: 2;
+      }
+
+      /* Education appended at the bottom */
+      .sidebar-edu-mobile {
+        display: block;
+        order: 3;
+        margin-top: 48px;
+        padding-top: 48px;
+        border-top: 1px solid var(--border);
+      }
     }
 
     @media print {
-      /* ── Reset for print ── */
+      /* ── Reset ── */
       * { animation: none !important; transition: none !important; }
 
       body {
         background: #fff;
         color: #1a1410;
-        font-size: 11px;
-        line-height: 1.6;
+        font-size: 10.5px;
+        line-height: 1.55;
       }
 
-      body::before { display: none; }
-      .corner-ornament { display: none; }
-      .page-footer { display: none; }
+      body::before      { display: none; }
+      .corner-ornament  { display: none; }
+      .page-footer      { display: none; }
+      .sidebar          { display: none; }
+      .sidebar-edu-mobile { display: none; }
+
+      header, .main { opacity: 1 !important; }
 
       .page {
         max-width: 100%;
@@ -439,68 +474,113 @@
         margin: 0;
       }
 
-      /* ── Force all animated elements visible ── */
-      header, .sidebar, .main, .page-footer {
-        opacity: 1 !important;
+      /* ── Page size ── */
+      @page {
+        size: A4 portrait;
+        margin: 12mm 15mm 12mm 15mm;
       }
 
       /* ── Header ── */
       header {
-        padding-bottom: 16px;
-        margin-bottom: 20px;
+        padding-bottom: 12px;
+        margin-bottom: 14px;
       }
 
-      .name-block h1 {
-        font-size: 36pt;
+      .name-block h1 { font-size: 28pt; }
+
+      /* ── Profile ── */
+      .profile-text {
+        font-size: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
       }
 
-      /* ── Two-column layout preserved ── */
+      /* ── Skills band ── */
+      .print-skills-band {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0 16px;
+        border-bottom: 1px solid #d9cfc2;
+        padding: 10px 0;
+        margin-bottom: 16px;
+        break-inside: avoid;
+      }
+
+      .print-skills-col { padding: 0 4px; }
+
+      .print-skills-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 8px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #c4622d;
+        margin-bottom: 6px;
+      }
+
+      .print-skills-band ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .print-skills-band ul li {
+        font-size: 10px;
+        color: #2e1f0f;
+        padding: 2px 0;
+        border-bottom: 1px solid #d9cfc2;
+        line-height: 1.4;
+      }
+
+      .print-skills-band ul li:last-child { border-bottom: none; }
+
+      /* ── Body grid — collapse to single column ── */
       .body-grid {
-        grid-template-columns: 180px 1fr;
-        gap: 0 40px;
+        display: block;
       }
 
-      /* ── Strip decorative backgrounds ── */
+      /* ── Experience ── */
+      .section-label {
+        color: #c4622d;
+        margin-bottom: 10px;
+      }
+
+      .experience-list { gap: 14px; }
+
       .exp-entry {
+        padding-left: 14px;
         border-left-color: #d9cfc2;
+        break-inside: avoid;
       }
 
-      /* ── Page break rules ── */
+      .exp-header       { margin-bottom: 2px; }
+      .exp-company      { font-size: 13px; }
+      .exp-period       { font-size: 9.5px; }
+      .exp-role         { color: #c4622d; margin-bottom: 4px; font-size: 10px; }
+      .exp-context      { font-size: 10px; margin-bottom: 4px; }
+      .exp-bullets li   { font-size: 10px; line-height: 1.45; }
+      .exp-header       { break-after: avoid; }
+      .exp-role         { break-after: avoid; }
 
-      /* Never break inside a header or sidebar block */
-      header                  { break-inside: avoid; }
-      .sidebar-block          { break-inside: avoid; }
-      .edu-entry              { break-inside: avoid; }
-
-      /* Never break inside an experience entry */
-      .exp-entry              { break-inside: avoid; }
-
-      /* Allow a break before experience entries if needed,
-         but never orphan the company name from its bullets */
-      .exp-header             { break-after: avoid; }
-      .exp-role               { break-after: avoid; }
-
-      /* Force a new page before the main experience section
-         if sidebar + header already fills most of page 1.
-         Remove this rule if everything fits on one page. */
-      /* .main { break-before: page; } */
-
-      /* ── Print colors — keep terracotta accents ── */
-      .section-label          { color: #c4622d; }
-      .exp-role               { color: #c4622d; }
-      .edu-school             { color: #c4622d; }
-      .title-tag              { border-color: #d9cfc2; color: #9a8878; }
-
-      /* ── Links — show URL for contact ── */
-      .contact-block a::after {
-        content: none;
+      /* ── Education block ── */
+      .print-edu-block {
+        display: block;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid #d9cfc2;
+        break-inside: avoid;
       }
 
-      /* ── Page size — A4 ── */
-      @page {
-        size: A4 portrait;
-        margin: 14mm 16mm 14mm 16mm;
+      .print-edu-row {
+        display: flex;
+        gap: 40px;
+        margin-top: 8px;
       }
+
+      .print-edu-item .edu-degree { font-size: 12px; }
+      .print-edu-item .edu-school { font-size: 10px; color: #c4622d; margin-top: 2px; }
+
+      /* ── Colors ── */
+      .title-tag { border-color: #d9cfc2; color: #9a8878; }
     }
   </style>
 </head>
@@ -529,6 +609,46 @@
     and mentoring developers. Known for introducing engineering discipline (TDD, DevSecOps, CI/CD) into organizations
     that have outgrown their processes, and for translating complex technical decisions into clear business outcomes.
   </p>
+
+  <!-- ── SKILLS BAND (print only) ── -->
+  <div class="print-skills-band">
+    <div class="print-skills-col">
+      <div class="print-skills-label">Architecture</div>
+      <ul>
+        <li>Microservices &amp; API Design</li>
+        <li>System Scalability</li>
+        <li>Security &amp; DevSecOps</li>
+        <li>Cloud Integration (AWS)</li>
+      </ul>
+    </div>
+    <div class="print-skills-col">
+      <div class="print-skills-label">Governance</div>
+      <ul>
+        <li>TDD &amp; Clean Code</li>
+        <li>Shift-Left Strategy</li>
+        <li>Agile / Scrum Master</li>
+        <li>Team Scaling &amp; Recruitment</li>
+        <li>Budget Management</li>
+      </ul>
+    </div>
+    <div class="print-skills-col">
+      <div class="print-skills-label">Stack</div>
+      <ul>
+        <li>Java · Spring Boot</li>
+        <li>NodeJS · Python · C++</li>
+        <li>SQL · Odoo ERP</li>
+        <li>GitLab CI · GitHub Actions</li>
+      </ul>
+    </div>
+    <div class="print-skills-col">
+      <div class="print-skills-label">Languages</div>
+      <ul>
+        <li>French — Native</li>
+        <li>English — C1 · Fluent</li>
+        <li>Dutch — B2 · Professional</li>
+      </ul>
+    </div>
+  </div>
 
   <!-- ── BODY ── -->
   <div class="body-grid">
@@ -583,7 +703,7 @@
         </div>
       </div>
 
-      <div class="sidebar-block">
+      <div class="sidebar-block sidebar-edu">
         <div class="section-label">Education</div>
         <div class="edu-entry">
           <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
@@ -696,17 +816,53 @@
       </div>
     </main>
 
+    <!-- ── EDUCATION (mobile only, shown below experience) ── -->
+    <div class="sidebar-block sidebar-edu-mobile">
+      <div class="section-label">Education</div>
+      <div class="edu-entry">
+        <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
+        <div class="edu-school">ISIB · Brussels</div>
+        <div class="edu-note">Magna Cum Laude</div>
+      </div>
+      <div class="edu-entry">
+        <div class="edu-degree">Certified Scrum Master</div>
+        <div class="edu-school">2013</div>
+      </div>
+    </div>
+
+    <!-- ── EDUCATION (print only) ── -->
+    <div class="print-edu-block">
+      <div class="section-label">Education</div>
+      <div class="print-edu-row">
+        <div class="print-edu-item">
+          <div class="edu-degree">M.Eng. Electrical &amp; Computer Engineering</div>
+          <div class="edu-school">ISIB · Brussels — Magna Cum Laude</div>
+        </div>
+        <div class="print-edu-item">
+          <div class="edu-degree">Certified Scrum Master</div>
+          <div class="edu-school">2013</div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /body-grid -->
 
   <!-- ── FOOTER ── -->
   <footer class="page-footer">
     <span>Benoît Roman · Resume</span>
     <div class="footer-dot"></div>
-    <span>benoit.roman@proton.me</span>
+    <span><a href="mailto:benoit.roman@proton.me">benoit.roman@proton.me</a></span>
   </footer>
 
 </div><!-- /page -->
 
 <!-- Decorative SVG corner -->
 <svg class="corner-ornament" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="30" cy="30" r="28" stroke="#c4622d" st
+  <circle cx="30" cy="30" r="28" stroke="#c4622d" stroke-width="1"/>
+  <circle cx="30" cy="30" r="20" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="30" y1="2" x2="30" y2="58" stroke="#c4622d" stroke-width="0.5"/>
+  <line x1="2" y1="30" x2="58" y2="30" stroke="#c4622d" stroke-width="0.5"/>
+</svg>
+
+</body>
+</html>
